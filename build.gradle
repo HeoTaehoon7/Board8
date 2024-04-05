@@ -46,6 +46,10 @@ dependencies {
 	//sql로그
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 	
+	// 파일업로드 fileupload : commons-io-2.11.0	
+	implementation "commons-io:commons-io:2.11.0"
+	// 파일업로드 fileupload : commons-fileupload-1.4
+	implementation 'commons-fileupload:commons-fileupload:1.5'
 }
 
 tasks.named('bootBuildImage') {

@@ -31,6 +31,30 @@ CREATE  TABLE  BOARD (
     , HIT	       NUMBER(9,0)           DEFAULT  0  
 );
 
+-- 자료실
+------------------------------------
+ -- 자료실을 위한 FILES 테이블 생성
+ ------------------------------------
+ CREATE   TABLE   FILES
+ (
+      FILE_NUM    NUMBER(6, 0)    NOT NULL   -- 파일 번호
+    , IDX         NUMBER(6, 0)    NOT NULL   -- 게시물 번호
+    , FILENAME    VARCHAR2(260)   NOT NULL   -- 파일이름
+    , FILEEXT     VARCHAR2(260)   NOT NULL   -- 파일확장자 
+    , SFILENAME   VARCHAR2(260)   NOT NULL   -- 저장된 실제 파일명
+    
+    , CONSTRAINT     FILES_PK     PRIMARY KEY  -- 기본키 (복합키)
+    (
+        FILE_NUM,
+        IDX
+    )
+    , CONSTRAINT     FK_BOARD_FILES_IDX
+      FOREIGN  KEY   (IDX)
+      REFERENCES     BOARD(IDX)
+     --  ON DELETE  CASCADE
+ )
+ 
+
 
 
 
