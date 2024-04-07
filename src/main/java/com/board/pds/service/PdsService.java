@@ -3,6 +3,8 @@ package com.board.pds.service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
@@ -12,7 +14,7 @@ public interface PdsService {
 
 	List<PdsVo> getPdsList(String menu_id);
 
-	void setWrite(HashMap<String, Object> map, HttpServletRequest request);
+	void setWrite(HashMap<String, Object> map, MultipartFile[] uploadFiles);
 
 	PdsVo getView(HashMap<String, Object> map);
 
@@ -20,9 +22,7 @@ public interface PdsService {
 
 	void setDelete(HashMap<String, Object> map);
 
-	void deleteUploadFile(HashMap<String, Object> map);
-
-	void setUpdate(HashMap<String, Object> map, HttpServletRequest request);
+	void setUpdate(HashMap<String, Object> map, MultipartFile[] uploadFiles);
 
 	void setReadcountUpdate(HashMap<String, Object> map);
 

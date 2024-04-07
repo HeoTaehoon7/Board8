@@ -36,6 +36,20 @@
       width : 100%;
    }
 </style>
+
+<script src="https://code.jquery.com/jquery.min.js"></script>
+
+<script>
+  $( function() {
+	  let num = 1;
+	  $('#btnAddFile').on('click', function(e) {
+		  let tag = '<input type="file"  name="upfile' + num + '" class="upfile"/><br>';
+		  $('#tdfile').append( tag );		  
+		  num++;
+	  })
+  });
+</script>
+
 </head>
 <body>
   <main>
@@ -43,7 +57,7 @@
     <%@include file="/WEB-INF/include/pagingmenus.jsp" %>
   
 	<h2>게시글 등록</h2>
-	<form action="/BoardPaging/Write" method="POST">
+	<form action="/BoardPaging/Write" method="POST" enctype="multipart/form-data">
 	<input type="hidden" name="menu_id" value="${ menu_id }" />
 	<input type="hidden" name="nowpage" value="${ nowpage }" />
 	<table>
@@ -58,6 +72,13 @@
 	 <tr>
 	   <td>내용</td>
 	   <td><textarea name="content"></textarea></td>
+	 </tr>	
+	 <tr>
+	   <td>파일</td>
+	   <td id="tdfile">
+         <input type="button"  id="btnAddFile" value="파일 추가(최대 30M byte)" /><br>
+         <input type="file"  name="upfile"  class="upfile"/><br>
+       </td>
 	 </tr>	
 	 <tr>
 	   <td colspan="2">

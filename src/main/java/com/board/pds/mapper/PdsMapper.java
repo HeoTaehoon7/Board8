@@ -1,12 +1,15 @@
-package com.board.pds.dao;
+package com.board.pds.mapper;
 
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
-public interface PdsDao {
+@Mapper
+public interface PdsMapper {
 
 	List<PdsVo> getPdsList(String menu_id);
 
@@ -23,5 +26,7 @@ public interface PdsDao {
 	void setUpdate(HashMap<String, Object> map);
 
 	void setReadcountUpdate(HashMap<String, Object> map);
+
+	void setFileWrite(HashMap<String, Object> map);
 
 }

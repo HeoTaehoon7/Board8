@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.pds.mapper.PdsMapper">  
+
+   <!-- 목록 조회 : DESC : 최신순   -->
+   <select id         = "getPdsList" >
+   
+      SELECT     IDX, 
+                 MENU_ID,  
+                 TITLE,
+                 WRITER,
+                 READCOUNT,
+                 ( 
+                    SELECT  COUNT( FILE_NUM ) 
+                     FROM   FILES  F
+                     WHERE  F.IDX  =  B.IDX  
+                 )  FILESCOUNT,
+                 TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS')  REGDATE
+                 
+       FROM      BOARD  B
+       
+       <if test="menu_id != null and menu_id !=''">
+       WHERE     
+          MENU_ID  =  #{menu_id}
+       </if>   
+       ORDER BY NREF  DESC, STEP   ASC         
+   
+   </select>  
+   
+   <!-- ============================================ -->
+   <!-- 페이징 list  -->
+   <select  id="getPdsPagingList">
+   
+   SELECT  * FROM
+    (   
+        SELECT   
+                 ROW_NUMBER() OVER(ORDER BY NREF DESC, STEP ASC)  RNUM,
+                 IDX, 
+                 MENU_ID,
+                 TITLE,
+                 WRITER,
+                 READCOUNT,
+                 ( 
+                    SELECT  COUNT( FILE_NUM ) 
+                     FROM   FILES  F
+                     WHERE  F.IDX  =  B.IDX  
+                 )  FILESCOUNT,
+                 TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS')  REGDATE,
+                 BNUM,
+                 LVL,
+                 STEP,
+                 NREF,
+                 DELNUM,
+                 PARENT
+                 
+       FROM      BOARD  B       
+       <if test="menu_id != null and menu_id !=''">  
+       WHERE     
+          MENU_ID  =  #{menu_id}
+       </if>         
+    )  T
+    WHERE  T.RNUM  
+           BETWEEN  #{startnum}  AND  #{endnum}  
+   
+   </select>
+   
+   <!-- 전체 자료수 조회 -->
+   <!--
+        resultType     = "_int"
+        resultType     = "Integer"
+        resultType     = "java.lang.Integer"         
+     -->
+   <select   id             = "getTotalCount"
+             parameterType  = "hashmap"
+             resultType     = "_int">
+                          
+      SELECT
+         COUNT( IDX )  AS   TOTALCOUNT
+       FROM   
+         BOARD
+       <if test="menu_id != null and menu_id != ''"> 
+         WHERE   MENU_ID = #{ menu_id }
+       </if>
+       
+   </select>
+   
+   <!-- =============================  -->   
+   
+   <select  id         = "getView">
+       SELECT  IDX,
+               MENU_ID,
+               TITLE,
+               CONT,
+               WRITER,
+               READCOUNT,
+               TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE
+        FROM   BOARD
+        WHERE  BNO  =  #{ bno }
+   
+   </select>
+   
+   <select   id         = "getFileList" >
+   
+       SELECT
+		   FILE_NUM, IDX, FILENAME, FILEEXT, SFILENAME
+		FROM       FILES
+		WHERE      BNO  =  #{ bno } 
+		ORDER BY   FILE_NUM  ASC 
+   
+   </select>
+  
+
+   <!-- 새글 저장 로직 -->
+   <insert    id="setWrite">
+      INSERT INTO  BOARD (
+            BNO
+		  ,	MENU_ID
+	      ,	TITLE
+	      , CONT
+		  ,	WRITER
+		  , REGDATE
+	      , READCOUNT	
+      )
+      VALUES
+      (
+          (SELECT  NVL( MAX(BNO), 0 ) + 1 FROM BOARD)
+		  ,	#{ menu_id }
+	      ,	#{ title   }
+	      , #{ cont    }
+		  ,	#{ writer  }
+		  , SYSDATE
+	      , 0		 
+      )
+   
+   </insert>
+     
+   
+   <!-- FileInsert :넘어온 파일 여러개를 한번에 저장 insert all 
+     주의 사항: oracle GET_FILENUM() 함수를 만들고 실행할 것
+   -->
+   <insert  id="setFileWrite">
+      <foreach collection="fileList" item="file"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  FILES  VALUES (
+                GET_FILENUM()
+              , ( SELECT MAX(BNO) FROM BOARD  )
+              , #{ file.filename   }
+              , #{ file.fileext    }
+              , #{ file.sfilename  }
+           )
+      </foreach>
+   
+   </insert>
+   
+   <!-- 파일정보 수정 - 파일이 추가될때 idx 는 기존idx 로 저장해여함  -->
+    <insert  id="FileInsert2">
+      <foreach collection="fileList" item="file"
+           index      = "i"  
+           open       = "INSERT ALL"    
+           close      = "SELECT * FROM DUAL"
+           separator  = " " >
+           INTO  FILES  VALUES (
+                GET_FILENUM()
+              , #{ bno             }
+              , #{ file.filename   }
+              , #{ file.fileext    }
+              , #{ file.sfilename  }
+           )
+      </foreach>
+   
+   </insert>
+      
+   <delete   id="setFileDelete">   
+      DELETE   FROM  FILES
+       WHERE  BNO  =  #{ bno }   
+   </delete>
+   
+   <delete   id="setFileDelete2">   
+      DELETE   FROM  FILES
+       WHERE  FILE_NUM  =  #{ file_num }   
+   </delete>
+   
+   
+   
+   <delete   id="setDelete">   
+      DELETE   FROM  BOARD
+       WHERE  BNO  =  #{ bno }       
+   </delete>
+   
+    <update   id = "setPdsUpdate">
+       
+       UPDATE    BOARD
+        SET      TITLE  = #{ title }
+               , CONT   = #{ cont  }
+        WHERE    BNO  =  #{ bno }   
+         
+       
+    </update>
+ 
+ 
+ 
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+   

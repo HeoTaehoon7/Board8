@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.board.menus.domain.MenuVo;
@@ -25,13 +26,12 @@ import com.board.pds.service.PdsService;
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/Pds")
 public class PdsController {
-	
+		
 	@Autowired	
 	private   MenuMapper  menuMapper;
 	
@@ -62,15 +62,12 @@ public class PdsController {
 		return  mv;		
 	
 	}
-	
-	// 새글: /Pds/WriteForm?menu_id=MENU01&bnum=0
-	// 답글: /Pds/WriteForm?menu_id=MENU01&idx=21&bnum=21&lvl=0&step=0&nref=21
+		
 	@RequestMapping("/WriteForm")
 	public  ModelAndView   writeForm(
 		@RequestParam  HashMap<String, Object>  map) {
 		
 		System.out.println( map );
-		// map: {menu_id=MENU01, idx=31, bnum=21, lvl=0, step=0, nref=21}
 		
 		// 메뉴 목록
 		List<MenuVo>  menuList  =  menuMapper.getMenuList(); 
@@ -96,11 +93,10 @@ public class PdsController {
 	@RequestMapping("/Write")
 	public  ModelAndView   write(
 		@RequestParam  HashMap<String, Object> map,    // String 정보
-		HttpServletRequest   request                   // String + File(Binary)
+		MultipartFile[] uploadfields                    // String + File(Binary)
 			) {
 		// 넘어온 정보
 		System.out.println( map );
-		// {lvl=, nref=, bnum=0, step=, writer=aaa, title=aaa, cont=aaaa, menu_id=MENU01}
 				
 		// 저장
 		// map 정보
@@ -110,7 +106,7 @@ public class PdsController {
 		// 2. 파일 정보 저장    -> Files table  저장 
 		// 3. 실제 파일 저장    -> d:\dev\data\ 저장 : fileupload library
 		
-		pdsService.setWrite(map, request);		
+		pdsService.setWrite(map, uploadfields);		
 		
 		String  menu_id =  String.valueOf( map.get("menu_id") );
 		
@@ -203,10 +199,10 @@ public class PdsController {
 	@RequestMapping("/Update")
 	public  ModelAndView  update(
 		@RequestParam   HashMap<String, Object>  map,
-		HttpServletRequest                       request ) {
+		MultipartFile[]                          uploadFiles ) {
 		
 		System.out.println("1:" + map);
-		pdsService.setUpdate( map, request );
+		pdsService.setUpdate( map, uploadFiles );
 		System.out.println("2:" + map);
 		
 		String        menu_id  =  String.valueOf( map.get("menu_id") );    
