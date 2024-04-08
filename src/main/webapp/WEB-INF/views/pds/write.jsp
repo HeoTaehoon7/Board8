@@ -57,9 +57,9 @@
     <%@include file="/WEB-INF/include/pagingmenus.jsp" %>
   
 	<h2>게시글 등록</h2>
-	<form action="/BoardPaging/Write" method="POST" enctype="multipart/form-data">
-	<input type="hidden" name="menu_id" value="${ menu_id }" />
-	<input type="hidden" name="nowpage" value="${ nowpage }" />
+	<form action="/Pds/Write" method="POST" enctype="multipart/form-data">
+	<input type="hidden" name="menu_id" value="${ map.menu_id }" />
+	<input type="hidden" name="nowpage" value="${ map.nowpage }" />
 	<table>
 	 <tr>
 	   <td>제목</td>
@@ -77,7 +77,7 @@
 	   <td>파일</td>
 	   <td id="tdfile">
          <input type="button"  id="btnAddFile" value="파일 추가(최대 30M byte)" /><br>
-         <input type="file"  name="upfile"  class="upfile"/><br>
+         <input type="file"  name="upfile"  class="upfile" multiple /><br>
        </td>
 	 </tr>	
 	 <tr>

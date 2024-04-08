@@ -5,13 +5,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.board.domain.BoardVo;
+import com.board.menus.domain.MenuVo;
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
 @Mapper
 public interface PdsMapper {
 
-	List<PdsVo> getPdsList(String menu_id);
+	List<PdsVo> getPdsList(MenuVo menuVo);
 
 	void setWrite(HashMap<String, Object> map);
 

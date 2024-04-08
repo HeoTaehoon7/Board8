@@ -19,10 +19,11 @@
 	  }
 	  
 	  td:nth-of-type(1) { width : 100px; }  
-	  td:nth-of-type(2) { width : 380px; text-align : left;  }  
+	  td:nth-of-type(2) { width : 300px; text-align : left;  }  
 	  td:nth-of-type(3) { width : 110px; }  
-	  td:nth-of-type(4) { width : 110px; }  
-	  td:nth-of-type(5) { width : 100px; }
+	  td:nth-of-type(4) { width : 80px; }  
+	  td:nth-of-type(5) { width : 110px; }  
+	  td:nth-of-type(6) { width : 100px; }
 	  
 	  tr:first-child > td { text-align:center; }
 	   
@@ -57,26 +58,28 @@
 	      <td>번호</td>
 	      <td>제목</td>
 	      <td>작성자</td>	      
+	      <td>파일수</td>	      
 	      <td>작성일</td>	   
 	      <td>조회수</td>	   
 	    </tr>
 	    <tr>
-	      <td colspan="5">
-	        [<a href="/BoardPaging/WriteForm?menu_id=${ menu_id }&nowpage=${nowpage}">새 글 추가</a>]
+	      <td colspan="6">
+	        [<a href="/Pds/WriteForm?menu_id=${ menu_id }&nowpage=${nowpage}">새 글 추가</a>]
 	      </td>
 	    </tr>
 	    
-	    <c:forEach  var="boardVo"  items="${ response.list }" >
+	    <c:forEach  var="pdsVo"  items="${ pdsList }" >
 	    <tr>
-	      <td>${ boardVo.bno   }</td>
+	      <td>${ pdsVo.bno   }</td>
 	      <td>
-	       <a href="/BoardPaging/View?bno=${ boardVo.bno }&nowpage=${nowpage}&menu_id=${menu_id}">
-	          ${ boardVo.title       }
+	       <a href="/Pds/View?bno=${ pdsVo.bno }&nowpage=${map.nowpage}&menu_id=${map.menu_id}">
+	          ${ pdsVo.title       }
 	       </a>
 	      </td>	      	      
-	      <td>${ boardVo.writer      }</td>	      
-	      <td>${ boardVo.regdate     }</td>      
-	      <td>${ boardVo.hit         }</td>      
+	      <td>${ pdsVo.writer      }</td>	      
+	      <td>${ pdsVo.filescount  }</td>	      
+	      <td>${ pdsVo.regdate     }</td>      
+	      <td>${ pdsVo.hit         }</td>      
 	    </tr>
 	    </c:forEach>
 	    

@@ -8,17 +8,17 @@
    <!-- 목록 조회 : DESC : 최신순   -->
    <select id         = "getPdsList" >
    
-      SELECT     IDX, 
+      SELECT     BNO, 
                  MENU_ID,  
                  TITLE,
                  WRITER,
-                 READCOUNT,
+                 HIT,
                  ( 
                     SELECT  COUNT( FILE_NUM ) 
                      FROM   FILES  F
-                     WHERE  F.IDX  =  B.IDX  
+                     WHERE  F.BNO  =  B.BNO  
                  )  FILESCOUNT,
-                 TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS')  REGDATE
+                 TO_CHAR(REGDATE, 'YYYY-MM-DD')  REGDATE
                  
        FROM      BOARD  B
        
@@ -26,7 +26,7 @@
        WHERE     
           MENU_ID  =  #{menu_id}
        </if>   
-       ORDER BY NREF  DESC, STEP   ASC         
+       ORDER BY BNO  DESC 
    
    </select>  
    
@@ -37,24 +37,18 @@
    SELECT  * FROM
     (   
         SELECT   
-                 ROW_NUMBER() OVER(ORDER BY NREF DESC, STEP ASC)  RNUM,
-                 IDX, 
+                 ROW_NUMBER() OVER(ORDER BY BNO DESC)  RNUM,
+                 BNO, 
                  MENU_ID,
                  TITLE,
                  WRITER,
-                 READCOUNT,
+                 HIT,
                  ( 
                     SELECT  COUNT( FILE_NUM ) 
                      FROM   FILES  F
                      WHERE  F.IDX  =  B.IDX  
                  )  FILESCOUNT,
-                 TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS')  REGDATE,
-                 BNUM,
-                 LVL,
-                 STEP,
-                 NREF,
-                 DELNUM,
-                 PARENT
+                 TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS')  REGDATE
                  
        FROM      BOARD  B       
        <if test="menu_id != null and menu_id !=''">  
@@ -78,7 +72,7 @@
              resultType     = "_int">
                           
       SELECT
-         COUNT( IDX )  AS   TOTALCOUNT
+         COUNT( BNO )  AS   TOTALCOUNT
        FROM   
          BOARD
        <if test="menu_id != null and menu_id != ''"> 
@@ -90,12 +84,12 @@
    <!-- =============================  -->   
    
    <select  id         = "getView">
-       SELECT  IDX,
+       SELECT  BNO,
                MENU_ID,
                TITLE,
-               CONT,
+               CONTENT,
                WRITER,
-               READCOUNT,
+               HIT,
                TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI:SS') REGDATE
         FROM   BOARD
         WHERE  BNO  =  #{ bno }
@@ -105,7 +99,7 @@
    <select   id         = "getFileList" >
    
        SELECT
-		   FILE_NUM, IDX, FILENAME, FILEEXT, SFILENAME
+		   FILE_NUM, BNO, FILENAME, FILEEXT, SFILENAME
 		FROM       FILES
 		WHERE      BNO  =  #{ bno } 
 		ORDER BY   FILE_NUM  ASC 
@@ -119,17 +113,17 @@
             BNO
 		  ,	MENU_ID
 	      ,	TITLE
-	      , CONT
+	      , CONTENT
 		  ,	WRITER
 		  , REGDATE
-	      , READCOUNT	
+	      , HIT	
       )
       VALUES
       (
           (SELECT  NVL( MAX(BNO), 0 ) + 1 FROM BOARD)
 		  ,	#{ menu_id }
 	      ,	#{ title   }
-	      , #{ cont    }
+	      , #{ content  }
 		  ,	#{ writer  }
 		  , SYSDATE
 	      , 0		 
@@ -196,10 +190,17 @@
     <update   id = "setPdsUpdate">
        
        UPDATE    BOARD
-        SET      TITLE  = #{ title }
-               , CONT   = #{ cont  }
-        WHERE    BNO  =  #{ bno }   
-         
+        SET      TITLE    = #{ title }
+               , CONTENT  = #{ content  }
+        WHERE    BNO      = #{ bno }   
+       
+    </update>
+    
+    <update   id = "setReadcountUpdate">
+       
+       UPDATE    BOARD
+        SET      HIT    = HIT + 1
+        WHERE    BNO   =  #{ bno }   
        
     </update>
  

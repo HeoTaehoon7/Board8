@@ -32,8 +32,8 @@
 	<div><a href="/BoardPaging/WriteForm?nowpage=1&menu_id=MENU01">게시물 등록(페이징)</a></div>
 	<div>&nbsp;</div>
 	
-	<div><a href="/Pds/List?menu_id=MENU01">자료실 목록</a></div>
-    <div><a href="/Pds/WriteForm?menu_id=MENU01&bnum=0">자료실 등록</a></div>		
+	<div><a href="/Pds/List?menu_id=MENU01&nowpage=1">자료실 목록</a></div>
+    <div><a href="/Pds/WriteForm?menu_id=MENU01&nowpage=1">자료실 등록</a></div>		
 	<div>&nbsp;</div>	
 	<div>
 	   ${ sessionScope.login.username } 님 환영합니다<br>

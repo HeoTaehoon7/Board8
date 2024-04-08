@@ -38,7 +38,7 @@ CREATE  TABLE  BOARD (
  CREATE   TABLE   FILES
  (
       FILE_NUM    NUMBER(6, 0)    NOT NULL   -- 파일 번호
-    , IDX         NUMBER(6, 0)    NOT NULL   -- 게시물 번호
+    , BNO          NUMBER(6, 0)    NOT NULL   -- 게시물 번호
     , FILENAME    VARCHAR2(260)   NOT NULL   -- 파일이름
     , FILEEXT     VARCHAR2(260)   NOT NULL   -- 파일확장자 
     , SFILENAME   VARCHAR2(260)   NOT NULL   -- 저장된 실제 파일명
@@ -46,12 +46,12 @@ CREATE  TABLE  BOARD (
     , CONSTRAINT     FILES_PK     PRIMARY KEY  -- 기본키 (복합키)
     (
         FILE_NUM,
-        IDX
+        BNO
     )
     , CONSTRAINT     FK_BOARD_FILES_IDX
-      FOREIGN  KEY   (IDX)
-      REFERENCES     BOARD(IDX)
-     --  ON DELETE  CASCADE
+      FOREIGN  KEY   (BNO)
+      REFERENCES     BOARD(BNO)
+      ON DELETE  CASCADE
  )
  
 

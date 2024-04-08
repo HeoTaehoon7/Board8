@@ -1,6 +1,5 @@
 package com.board.pds.service.impl;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.menus.domain.MenuVo;
 import com.board.pds.mapper.PdsMapper;
 import com.board.pds.service.PdsService;
 import com.board.pds.vo.FilesVo;
@@ -19,16 +19,17 @@ import com.board.pds.vo.PdsVo;
 public class PdsServiceImpl implements PdsService {
 	
 	//application.properties의 변수(import org.springframework.beans.factory.annotation.Value) 
-	@Value("${part.upload.path}")
+	@Value("${part4.upload-path}")
     private String uploadPath;
 
 	@Autowired
 	private   PdsMapper  pdsMapper;
 	
 	@Override
-	public List<PdsVo> getPdsList(String menu_id) {
+	public List<PdsVo> getPdsList(MenuVo menuVo) {
 		
-		List<PdsVo>  pdsList  =  pdsMapper.getPdsList( menu_id );  
+		
+		List<PdsVo>  pdsList  =  pdsMapper.getPdsList( menuVo );  
 		
 		return pdsList;
 	}
@@ -37,8 +38,11 @@ public class PdsServiceImpl implements PdsService {
 	public void setWrite(
 			HashMap<String, Object> map, 
 			MultipartFile[] uploadfiles) {
+
+		System.out.println("uploadPath:" + uploadPath);
         
 		System.out.println("1:" + map);
+		map.put("uploadPath", uploadPath);
 		
 		// 자료실 글쓰기 + 파일 저장
 		// 1. 파일 저장 
@@ -53,7 +57,8 @@ public class PdsServiceImpl implements PdsService {
 		// Board( <- map), Files( <- map 안의 fileList )
 		// FILES db 에 FILE 정보 저장
 		/*
-		2:{lvl=, nref=, bnum=0, step=, writer=aaa, title=aaa, cont=aaa, menu_id=MENU01,
+		2:{lvl=, nref=, bnum=0, step=, writer=aaa, 
+		title=aaa, content=aaa, menu_id=MENU01,
 		  fileList=[
 			 FilesVo [file_num=0, idx=0, filename=history-flower.jpg, fileext=.jpg, sfilename=history-flower.jpg], 
 			 FilesVo [file_num=0, idx=0, filename=색상영역.jpg, fileext=.jpg, sfilename=색상영역.jpg], 
@@ -61,6 +66,7 @@ public class PdsServiceImpl implements PdsService {
 		  ]
 	    }
 	    */
+
 		List<FilesVo>  fileList =  (List<FilesVo>) map.get("fileList");
 		if( fileList.size() != 0 )
 			pdsMapper.setFileWrite( map );	
@@ -73,6 +79,7 @@ public class PdsServiceImpl implements PdsService {
 	@Override
 	public PdsVo getView(HashMap<String, Object> map) {
 		
+		map.put("uploadPath", uploadPath);
 		PdsVo   pdsVo  =  pdsMapper.getView( map );
 		
 		return  pdsVo;
@@ -89,6 +96,7 @@ public class PdsServiceImpl implements PdsService {
 	@Override
 	public void setDelete(HashMap<String, Object> map) {
 		
+		map.put("uploadPath", uploadPath);
 		System.out.println("map1:" + map);
 
 		pdsMapper.setDelete( map ); // BOARD, FILES 의 IDX 번째 자료를 삭제
@@ -98,7 +106,7 @@ public class PdsServiceImpl implements PdsService {
 		// idx 에 해당하는 파일 정보들
 		List<FilesVo>  fileList  =  (List<FilesVo>) map.get("fileList"); 
 		// IDX 에 해당 파일을 삭제
-		PdsFile.delete( fileList );
+		PdsFile.delete( uploadPath, fileList );
 		
 		// files db  삭제
 		pdsMapper.deleteUploadFile(map);
@@ -110,6 +118,7 @@ public class PdsServiceImpl implements PdsService {
 	@Override
 	public void setUpdate(HashMap<String, Object> map, 
 			MultipartFile[] uploadFiles) {
+		map.put("uploadPath", uploadPath);
 		
 		// 1. request 넘어온 파일 저장
 		List<FilesVo>  fileList =  (List<FilesVo>) map.get("fileList");
@@ -128,7 +137,7 @@ public class PdsServiceImpl implements PdsService {
 		
 	}
 
-
+	
 
 }
 

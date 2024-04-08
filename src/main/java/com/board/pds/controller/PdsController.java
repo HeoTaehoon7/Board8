@@ -26,19 +26,20 @@ import com.board.pds.service.PdsService;
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/Pds")
 public class PdsController {
-		
+	
 	@Autowired	
-	private   MenuMapper  menuMapper;
+	private   MenuMapper   menuMapper;
 	
 	@Autowired
 	private   PdsService   pdsService;
 	
-	// /Pds/List?menu_id=MENU01
+	// /Pds/List?menu_id=MENU01&nowpage=1
 	@RequestMapping("/List")
 	public   ModelAndView   list(
 		@RequestParam  HashMap<String, Object>  map	
@@ -48,11 +49,11 @@ public class PdsController {
 		List<MenuVo>  menuList  =  menuMapper.getMenuList();
 		
 		String        menu_id   =  String.valueOf( map.get("menu_id") );		
-		MenuVo        menuVo  =  menuMapper.getMenu(menu_id);
+		MenuVo        menuVo    =  menuMapper.getMenu(menu_id);
 		map.put("menuname", menuVo.getMenu_name());
 		
 		// 게시물 목록
-		List<PdsVo>   pdsList   =  pdsService.getPdsList(menu_id); 
+		List<PdsVo>   pdsList   =  pdsService.getPdsList(menuVo); 
 				
 		ModelAndView  mv = new ModelAndView();
 		mv.setViewName("pds/list");  
@@ -62,18 +63,21 @@ public class PdsController {
 		return  mv;		
 	
 	}
-		
+	
+	// 새글: /Pds/WriteForm?menu_id=MENU01&bnum=0
+	// 답글: /Pds/WriteForm?menu_id=MENU01&idx=21&bnum=21&lvl=0&step=0&nref=21
 	@RequestMapping("/WriteForm")
 	public  ModelAndView   writeForm(
 		@RequestParam  HashMap<String, Object>  map) {
 		
 		System.out.println( map );
+		// map: {menu_id=MENU01, idx=31, bnum=21, lvl=0, step=0, nref=21}
 		
 		// 메뉴 목록
 		List<MenuVo>  menuList  =  menuMapper.getMenuList(); 
 		
 		PdsVo         pdsVo     =  null;
-		if( map.get("idx") != null  ) {   // 답글 처리
+		if( map.get("bno") != null  ) {   // 답글 처리
 			// pdsVo  =  pdsService.getView(   )
 		}
 		
@@ -92,21 +96,24 @@ public class PdsController {
 	// /Pds/Write 
 	@RequestMapping("/Write")
 	public  ModelAndView   write(
-		@RequestParam  HashMap<String, Object> map,    // String 정보
-		MultipartFile[] uploadfields                    // String + File(Binary)
+			@RequestParam     HashMap<String, Object>  map,
+			@RequestParam(value="upfile", required = false)  
+			          MultipartFile[]       uploadFiles
 			) {
 		// 넘어온 정보
-		System.out.println( map );
+		//  MultipartFile[] uploadFiles 은 @RequestParam 없으면 null 로 표시됨 
+		System.out.println( uploadFiles );
 				
 		// 저장
 		// map 정보
 		// 1. 새글(답글) 글저장 -> Board table  저장 
+		// map:{menu_id=, nowpage=, title=aaaaaa, writer=aaaa, content=aaaaa}}
 		
 		// request 정보활용
 		// 2. 파일 정보 저장    -> Files table  저장 
 		// 3. 실제 파일 저장    -> d:\dev\data\ 저장 : fileupload library
 		
-		pdsService.setWrite(map, uploadfields);		
+		pdsService.setWrite(map, uploadFiles);		
 		
 		String  menu_id =  String.valueOf( map.get("menu_id") );
 		
@@ -198,8 +205,9 @@ public class PdsController {
 	
 	@RequestMapping("/Update")
 	public  ModelAndView  update(
-		@RequestParam   HashMap<String, Object>  map,
-		MultipartFile[]                          uploadFiles ) {
+		@RequestParam     HashMap<String, Object>  map,
+		@RequestParam(value="upfile", required = false)  
+		          MultipartFile[]       uploadFiles ) {
 		
 		System.out.println("1:" + map);
 		pdsService.setUpdate( map, uploadFiles );
@@ -229,7 +237,7 @@ public class PdsController {
          ) throws IOException {
       
       String     INTERNAL_FILE         =  sfile;
-      String     EXTERNAL_FILE_PATH    =  "d:\\dev\\data\\" + sfile;
+      String     EXTERNAL_FILE_PATH    =  "d:/data/" + sfile;
             
       File       file  =  null;
       if ( type.equalsIgnoreCase("internal")  ) {

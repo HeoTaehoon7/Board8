@@ -1,3 +1,5 @@
+create sequence  FILENUM_SEQ;
+
 create or replace NONEDITIONABLE FUNCTION   GET_FILENUM
 RETURN
    NUMBER

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.menus.domain.MenuVo;
 import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface PdsService {
 
-	List<PdsVo> getPdsList(String menu_id);
+	List<PdsVo> getPdsList(MenuVo menuVo);
 
 	void setWrite(HashMap<String, Object> map, MultipartFile[] uploadFiles);
 
