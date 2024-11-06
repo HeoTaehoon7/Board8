@@ -13,6 +13,11 @@
 
 <style>
   
+  #searchbox {
+     width      : 400px;
+     margin     : 20px auto;
+  }
+  
   #table {
      td {
        padding : 10px;
@@ -81,10 +86,26 @@
 	     </tr> 
 	    </c:forEach> 
 	    
-	  </table>
-	  
-	  <%@include file="/WEB-INF/include/paging.jsp" %>
+	  </table> 
 	
+	  
+	  <!-- /Pds/List?nowpage=1&menu_id=MENU01 -->
+	  <div  id="searchbox">
+	  <form  action="/Pds/List"  method="POST">
+	  <input type="hidden" name="nowpage" value="${ map.nowpage }" />
+	  <input type="hidden" name="menu_id" value="${ map.menu_id }" />
+	  <select name="search">
+	<!--   <option value="">선택</option>  -->
+	    <option value="title">제목</option>
+	    <option value="writer">작성자</option>
+	    <option value="content">내용</option>
+	  </select>
+	  <input type="text"   name="searchtext" />
+	  <input type="submit" value="검색" />
+	  </form>
+	  </div>
+	  
+	    <%@include file="/WEB-INF/include/pagingpds.jsp" %>
 	</main>
 </body>
 </html>

@@ -11,6 +11,14 @@
       WHERE  MENU_ID = #{ menu_id  }
   
   </select>
+  
+  <!-- 
+   ${ search }      숫자 그냥 표시, 문자도 그냥 표시
+   #{ searchtext }  숫자 그냥 표시, 문자를 '' 추가해준다
+   search = title, searchtext = 파일
+    AND ${ search } LIKE  '%' || #{ searchtext } || '%'
+    AND title LIKE  '%' || '파일' || '%' 
+  -->
    
   <select id="getPdsList" >
   
@@ -33,15 +41,10 @@
          <if test="menu_id != null and menu_id !=''">
                AND MENU_ID = #{menu_id}             
          </if>
-         <if test="title != null and title !=''">
-               AND TITLE = #{title}             
+         <if test="search != null and search !=''">
+               AND ${ search } LIKE  '%' || #{ searchtext } || '%'             
          </if>
-         <if test="writer != null and writer !=''">
-               AND WRITER = #{writer}             
-         </if>
-         <if test="content != null and content !=''">
-               AND CONTENT = #{content}             
-         </if>
+     
        </where>
        
   	 ORDER BY  

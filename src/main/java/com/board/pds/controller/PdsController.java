@@ -72,12 +72,13 @@ public class PdsController {
 	    // offset, recordSize 		
 		int     offset        =  searchVo.getOffset();
 		int     recordSize     =  searchVo.getRecordSize();
-	
-		map.put("title",      map.get("title") );
-		map.put("writer",     map.get("writer") );
-		map.put("content",    map.get("content") );
-		map.put("offset",     offset);
-		map.put("recordSize", recordSize);
+			
+		// String  title  = String.valueOf( map.get("title") ); // 조회안됨
+		map.put("search",      map.get("search") );
+		map.put("searchtext",  map.get("searchtext") );
+		
+		map.put("offset",      offset);		
+		map.put("recordSize",  recordSize);
 		System.out.println("map:" + map  );
 		List<PdsVo>   pdsList  = pdsService.getPdsPagingList( map );  // menu_id, nowpage
 		
