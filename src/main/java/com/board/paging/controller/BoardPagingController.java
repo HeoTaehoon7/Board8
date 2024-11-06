@@ -32,8 +32,7 @@ public class BoardPagingController {
 	public   ModelAndView   list(int nowpage, BoardVo  boardVo) {
 		// 메뉴 목록
 		List<MenuVo>  menuList =  menuMapper.getMenuList();
-		
-		
+			
 		//------------------------------------
 		// 게시물 목록 조회 (페이징해서)
 		//   해당하는 자료수가 1 보다 작으면
@@ -86,7 +85,7 @@ public class BoardPagingController {
 		
 		mv.addObject("searchVo",  searchVo );
 		
-		mv.addObject("response", response );
+		mv.addObject("response",  response );
 		
 		mv.setViewName("boardpaging/list");
 		return        mv;

@@ -12,4 +12,10 @@ public interface PdsMapper {
 
 	List<PdsVo> getPdsList(HashMap<String, Object> map);
 
+	void setWrite(HashMap<String, Object> map);
+
+	void setFileWriter(HashMap<String, Object> map);
+
+	int count(Object object);
+
 }
