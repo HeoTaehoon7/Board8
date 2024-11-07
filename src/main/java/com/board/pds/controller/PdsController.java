@@ -298,6 +298,24 @@ public class PdsController {
 		
 	}
 	
+	// 자료실 글 삭제
+	// /Pds/Delete?idx=1011&menu_id=MENU01&nowpage=1
+	@RequestMapping("/Delete")
+	public   ModelAndView  delete(
+		@RequestParam  HashMap<String, Object> map	
+			) {
+		
+		// 삭제
+		pdsService.setDelete( map  );
+		
+		ModelAndView  mv   = new ModelAndView();
+		String        fmt  = "redirect:/Pds/List?menu_id=%s&nowpage=%s";
+		String        loc  = String.format(fmt, 
+				String.valueOf( map.get("menu_id")),
+				String.valueOf( map.get("nowpage")) );
+		mv.setViewName( loc );
+		return        mv;
+	}
 	
 }
 

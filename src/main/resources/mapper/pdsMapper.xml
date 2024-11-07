@@ -147,6 +147,7 @@
   
   </update>
   
+  <!-- file_num 으로 FilesVo 조회 -->
   <select  id="getFileInfo">
   
     SELECT
@@ -161,6 +162,33 @@
         FILE_NUM = #{ file_num }     
   
   </select>
+  
+  <!-- 수정을 위한 파일 삭제  -->
+  <delete  id="deleteUploadFileNum">
+  	
+  	DELETE
+  	  FROM   FILES
+  	  WHERE  FILE_NUM = #{ file_num }  	  
+  	  
+  </delete>
+  
+  <!-- idx 에 해당하는 Files 정보를 삭제 -->
+  <delete  id="deleteUploadFile">
+  
+    DELETE  
+     FROM   FILES
+     WHERE  IDX   =  #{ idx } 
+  
+  </delete>
+ 
+  <!-- idx 에 해당하는 board 정보를 삭제 -->
+  <delete  id="setDelete">
+  
+    DELETE  
+     FROM   BOARD
+     WHERE  IDX   =  #{ idx } 
+  
+  </delete>
  
   
 </mapper>

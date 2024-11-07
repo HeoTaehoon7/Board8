@@ -63,6 +63,47 @@
 
 </style>
 
+<script src="https://code.jquery.com/jquery.min.js"></script>
+<script>
+  $( function() {
+	 // #btnAddFile click
+	 $('#btnAddFile').on('click', function() {         
+         let tag  = '<input type="file" name="upfile" ';
+         tag     += ' class="upfile" multiple /><br>';
+         $('#tdfile').append(tag)         
+     })
+	 	 
+     // ❌ 클릭
+     $('.aDelete').on('click', function( event ) {
+         
+    	 event.preventDefault();   // a  tag 의 기본이벤트를 취소
+         event.stopPropagation();  //  이벤트 상위로 보낸다         
+         // alert('❌ 클릭');
+         
+         let aDelete = this;  // 현재 클릭한 ❌ a tag   
+         
+         // 서버에서 파일과 Files table 의 정보를 삭제한다
+         $.ajax({
+              url    : this.href,  // /deleteFile?file_num=${ file.file_num }
+              method : 'GET'
+         })
+         .done( function( result ) {
+              alert( '삭제 완료' )
+              $(aDelete).parent().remove();
+              
+         })
+         .fail( function( err ) {
+              console.log(error);
+              alert('서버오류발생:' + error)
+         });
+         
+     })
+     
+  
+  } )
+
+</script>
+
 </head>
 <body>
   <main>  
@@ -105,19 +146,20 @@
       <td  colspan="3" id="tdfile">
         <c:forEach  var="file"  items="${ fileList }">
           <div  class="text-start">
-            <a  class="aDelete"
-                href="/deleteFile?file_num=${ file.file_num }">
-            x
+            <a  class = "aDelete" 
+                style = "text-decoration:none;"
+                href  = "/deleteFile?file_num=${ file.file_num }">
+            ❌    
             </a>
             <a href="/Pds/filedownload/${ file.file_num }">
-              ${  file.filename  }
+            ${  file.filename  }
             </a>            
           </div>
         </c:forEach>
         <hr>
         <!-- 새 파일추가 -->
         <input type="button"  id  ="btnAddFile" value="파일추가(최대 100MB)" /><br>
-        <input type="file"    name="upfile"     class="upfile" multiple />        
+        <input type="file"    name="upfile"     class="upfile" multiple /><br>        
       </td>
      </tr>
      

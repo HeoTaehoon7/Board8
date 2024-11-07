@@ -116,6 +116,23 @@ public class PdsServiceImpl implements  PdsService {
 		FilesVo  filesVo  = pdsMapper.getFileInfo( file_num );				
 		return   filesVo;
 	}
+
+	@Override
+	public void setDelete(HashMap<String, Object> map) {
+		
+		// 1. 해당 파일 정보 조회
+		List<FilesVo>  fileList = pdsMapper.getFileList( map );
+		
+		// 2. idx 에 해당하는 실제 파일들을 삭제
+		PdsFile.delete(uploadPath, fileList);
+		
+		// 3. idx  에 해당하는 Files table 정보 삭제
+		pdsMapper.deleteUploadFile( map );
+		
+		// 4. idx  에 해당하는 board table 정보 삭제
+		pdsMapper.setDelete(  map );
+		
+	}
 	
 	
 

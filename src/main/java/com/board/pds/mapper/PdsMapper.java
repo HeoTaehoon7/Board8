@@ -29,4 +29,10 @@ public interface PdsMapper {
 
 	FilesVo getFileInfo(Long file_num);
 
+	void deleteUploadFileNum(HashMap<String, Object> map);
+
+	void deleteUploadFile(HashMap<String, Object> map);
+
+	void setDelete(HashMap<String, Object> map);
+
 }
