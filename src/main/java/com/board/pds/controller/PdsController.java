@@ -20,6 +20,7 @@ import com.board.paging.vo.PagingResponse;
 import com.board.paging.vo.SearchVo;
 import com.board.pds.mapper.PdsMapper;
 import com.board.pds.service.PdsService;
+import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
 @Controller
@@ -142,6 +143,35 @@ public class PdsController {
 		mv.setViewName( loc );
 		return        mv;		
 	} 
+	
+	// /Pds/View?idx=1011&menu_id=MENU01&nowpage=1
+	@RequestMapping("/View")
+	public  ModelAndView  view(
+		@RequestParam  HashMap<String, Object> map ) {
+		// 메뉴 목록
+		List<MenuVo>  menuList  =  menuMapper.getMenuList();
+		
+		// 조회수 증가
+		pdsService.setReadcountUpdate( map );  // map : idx
+		
+		// 조회할 자료실 게시물 정보 (idx)
+		PdsVo         pdsVo      =  pdsService.getPds(map);
+		String        content    =  pdsVo.getContent();
+		content.replace("\n", "<br>");
+		pdsVo.setContent(content);
+				
+		// 조회할 파일 정보
+		List<FilesVo>  fileList  =  pdsService.getFileList( map );  
+		
+		
+		ModelAndView  mv     =  new ModelAndView();
+		mv.addObject("menuList",   menuList );
+		mv.addObject("vo",         pdsVo    );
+		mv.addObject("fileList",   fileList );
+		mv.addObject("map",        map      );
+		mv.setViewName("pds/view");		
+		return        mv;
+	}
 	
 }
 

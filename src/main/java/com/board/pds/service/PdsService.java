@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.board.pds.vo.FilesVo;
 import com.board.pds.vo.PdsVo;
 
 public interface PdsService {
@@ -15,4 +16,19 @@ public interface PdsService {
 
 	List<PdsVo> getPdsPagingList(HashMap<String, Object> map);
 
+	void setReadcountUpdate(HashMap<String, Object> map);
+
+	PdsVo getPds(HashMap<String, Object> map);
+
+	List<FilesVo> getFileList(HashMap<String, Object> map);
+
 }
+
+
+
+
+
+
+
+
+

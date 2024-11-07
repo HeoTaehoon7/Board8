@@ -7,7 +7,7 @@
     <tr>
     <c:forEach var="menu" items="${ menuList }">
       <td>
-        <a href="/Pds/List?menu_id=${menu.menu_id}&nowpage=${nowpage}">
+        <a href="/Pds/List?menu_id=${menu.menu_id}&nowpage=${map.nowpage}">
           ${ menu.menu_name } 
         </a>
       </td>
