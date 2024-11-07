@@ -65,7 +65,7 @@ public class PdsFile {
 			//  파일저장
 			try {
 				uploadfile.transferTo(savePath);  // 업로드 폴더에 파일을 저장
-				System.out.println( savePath +  "가 저장됨" );
+				//System.out.println( savePath +  "가 저장됨" );
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

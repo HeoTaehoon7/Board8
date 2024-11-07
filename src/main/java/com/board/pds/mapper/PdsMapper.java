@@ -25,4 +25,8 @@ public interface PdsMapper {
 
 	List<FilesVo> getFileList(HashMap<String, Object> map);
 
+	void setUpdate(HashMap<String, Object> map);
+
+	FilesVo getFileInfo(Long file_num);
+
 }

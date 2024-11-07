@@ -22,6 +22,10 @@ public interface PdsService {
 
 	List<FilesVo> getFileList(HashMap<String, Object> map);
 
+	void setUpdate(HashMap<String, Object> map, MultipartFile[] uploadfiles);
+
+	FilesVo getFileInfo(Long file_num);
+
 }
 
 
